@@ -3,10 +3,10 @@ package com.example.amazone.api
 import com.example.amazone.utils.enums.ApiStatus
 
 
-data class ProductApiState<out T>(val status: ApiStatus, val data: List<T>?, val message: String?) {
+data class ProductApiState<out T>(val status: ApiStatus, val data:T?, val message: String?) {
     companion object{
         // in case of success
-        fun <T> success(data: List<T>?):ProductApiState<T>{
+        fun <T> success(data: T?):ProductApiState<T>{
             return  ProductApiState(ApiStatus.SUCCESS, data,null)
         }
 

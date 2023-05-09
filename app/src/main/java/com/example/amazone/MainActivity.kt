@@ -78,7 +78,7 @@ fun ProductListScreen(viewModel: ProductsViewModel, context: Context) {
         ApiStatus.SUCCESS -> {
             productState.data?.let { products ->
                 LazyColumn {
-                    items(products) { product ->
+                    items(products.products) { product ->
                         ProductCard(product = product)
                     }
                 }
@@ -116,11 +116,11 @@ fun ProductCard(product: Product) {
                     model =  product.image,
                     contentDescription = "Product Image",
                     modifier = Modifier
-                        .height(150.dp)
-                        .width(50.dp),
+                        .height(100.dp)
+                        .width(100.dp),
                     contentScale = ContentScale.Crop
                 )
-                Spacer(modifier = Modifier.width(20.dp))
+                Spacer(modifier = Modifier.width(40.dp))
 
                 Column() {
                     Text(
@@ -134,11 +134,6 @@ fun ProductCard(product: Product) {
                         color = Color.Gray
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = product.description,
-                        style = MaterialTheme.typography.bodySmall
-                    )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = " ${product.quantity} items in stock",
