@@ -1,11 +1,15 @@
 package com.example.amazone.di
 
+import android.content.Context
+import androidx.room.Room
 import com.example.amazone.api.ApiService
 import com.example.amazone.repository.ProductRepository
+import com.example.database.AppDatabase
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -27,7 +31,7 @@ object AppModule {
         val client = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .build()
-        return Retrofit.Builder().baseUrl("http://192.168.11.151:8080/api/")
+        return Retrofit.Builder().baseUrl("http://13.246.207.31:8080/api/")
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .client(client)
             .build()
@@ -39,4 +43,20 @@ object AppModule {
     fun provideProductRepository(apiService: ApiService): ProductRepository{
         return  ProductRepository(apiService)
     }
+
+    @Singleton
+    @Provides
+    fun provideDatabase(
+        @ApplicationContext app: Context
+    ) = Room.databaseBuilder<AppDatabase>(
+        app,
+        AppDatabase::class.java,
+        "amazone"
+    ).build()
+
+
+    @Singleton
+    @Provides
+    fun provideDao(db: AppDatabase) = db.productDao()
+
 }

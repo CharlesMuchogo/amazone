@@ -8,6 +8,7 @@ import com.example.amazone.models.Product
 import com.example.amazone.models.Products
 import com.example.amazone.repository.ProductRepository
 import com.example.amazone.utils.enums.ApiStatus
+import com.example.database.ProductDao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
@@ -16,8 +17,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-
 class ProductsViewModel @Inject constructor(
+//    private val appDatabase: ProductDao,
     private  val apiService: ApiService
 ) :ViewModel() {
     private  val repository = ProductRepository(apiService)
