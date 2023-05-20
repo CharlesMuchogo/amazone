@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
@@ -41,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.amazone.R
+import com.example.amazone.models.Category
 import com.example.amazone.models.Product
 import com.example.amazone.presentation.ProductsViewModel
 import com.example.amazone.utils.enums.ApiStatus
@@ -61,7 +63,7 @@ fun ProductCard(product: Product) {
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
             .height(250.dp)
-            .fillMaxWidth()
+            .width(180.dp)
             .wrapContentSize(Alignment.Center)
             .padding(8.dp)
 
@@ -112,6 +114,7 @@ fun ProductCard(product: Product) {
 
     }
 }
+
 
 @Composable
 fun LazyGrid(products: List<Product>) {
@@ -200,8 +203,8 @@ fun MyAppBar() {
 
 @Composable
 fun ProductList(products: List<Product>) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+    LazyRow(
+        modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
     ) {
         items(products) { product ->

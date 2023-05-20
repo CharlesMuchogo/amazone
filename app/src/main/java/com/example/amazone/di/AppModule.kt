@@ -31,7 +31,7 @@ object AppModule {
         val client = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .build()
-        return Retrofit.Builder().baseUrl("http://13.246.207.31:8080/api/")
+        return Retrofit.Builder().baseUrl("http://192.168.135.10:8080/api/")
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .client(client)
             .build()
@@ -44,19 +44,23 @@ object AppModule {
         return  ProductRepository(apiService)
     }
 
+    @Provides
+    @Singleton
+    fun provideCategoriesRepository(apiService: ApiService): ProductRepository{
+        return  ProductRepository(apiService)
+    }
+
     @Singleton
     @Provides
     fun provideDatabase(
         @ApplicationContext app: Context
-    ) = Room.databaseBuilder<AppDatabase>(
+    ) = Room.databaseBuilder(
         app,
         AppDatabase::class.java,
         "amazone"
     ).build()
 
 
-    @Singleton
-    @Provides
-    fun provideDao(db: AppDatabase) = db.productDao()
+
 
 }

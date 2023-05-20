@@ -1,9 +1,11 @@
 package com.example.amazone.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.amazone.api.ApiService
 import com.example.amazone.api.ProductApiState
+import com.example.amazone.models.CategoriesDTO
 import com.example.amazone.models.Product
 import com.example.amazone.models.Products
 import com.example.amazone.repository.ProductRepository
@@ -31,11 +33,20 @@ class ProductsViewModel @Inject constructor(
         )
     )
 
+    val categoriesState = MutableStateFlow(
+        ProductApiState<CategoriesDTO>(
+            status = ApiStatus.LOADING,
+            null,
+            "Getting Products"
+        )
+    )
+
     init {
-        getProdcts()
+        getProducts()
+        getCategories()
     }
 
-    fun getProdcts(){
+    private fun getProducts(){
         productState.value = ProductApiState.loading()
 
         viewModelScope.launch {
@@ -46,7 +57,21 @@ class ProductsViewModel @Inject constructor(
                 .collect{
                     productState.value =  ProductApiState.success(it.data)
                 }
+        }
+    }
 
+
+    private fun getCategories(){
+        categoriesState.value = ProductApiState.loading()
+
+        viewModelScope.launch {
+            repository.getCategories()
+                .catch {
+                    categoriesState.value =  ProductApiState.error(it.message.toString())
+                }
+                .collect{
+                    categoriesState.value =  ProductApiState.success(it.data)
+                }
         }
     }
 
