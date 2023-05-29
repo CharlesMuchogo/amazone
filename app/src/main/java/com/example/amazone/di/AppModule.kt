@@ -27,11 +27,13 @@ object AppModule {
 
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        val productionUrl = "http://13.246.207.31:8080/api/";
+        val localUrl = "http://192.168.135.19:8080/api/";
 
         val client = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .build()
-        return Retrofit.Builder().baseUrl("http://192.168.135.10:8080/api/")
+        return Retrofit.Builder().baseUrl(localUrl)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .client(client)
             .build()

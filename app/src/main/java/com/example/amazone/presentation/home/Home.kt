@@ -33,25 +33,33 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import coil.compose.AsyncImage
 import com.example.amazone.R
 import com.example.amazone.models.Category
 import com.example.amazone.models.Product
 import com.example.amazone.presentation.ProductsViewModel
+import com.example.amazone.presentation.bottomnavigation.Account
+import com.example.amazone.presentation.bottomnavigation.Cart
 import com.example.amazone.presentation.products.LazyGrid
 import com.example.amazone.presentation.products.ProductCard
+import com.example.amazone.presentation.products.ProductDescriptionPage
 import com.example.amazone.presentation.products.ProductList
+import com.example.amazone.presentation.products.Products
 import com.example.amazone.utils.enums.ApiStatus
 
 
 @Composable
-fun HomeScreen(viewModel: ProductsViewModel) {
-    ProductListScreen(viewModel)
+fun HomeScreen(viewModel: ProductsViewModel, navController: NavController) {
+    ProductListScreen(viewModel, navController)
 }
 
 
 @Composable
-fun ProductListScreen(viewModel: ProductsViewModel) {
+fun ProductListScreen(viewModel: ProductsViewModel, navController: NavController) {
     val productState = viewModel.productState.collectAsState()
     val categoriesState = viewModel.categoriesState.collectAsState()
 
@@ -71,49 +79,55 @@ fun ProductListScreen(viewModel: ProductsViewModel) {
 
         ApiStatus.SUCCESS -> {
             productState.value.data?.let { products ->
-                Column(
+                LazyColumn(
                     verticalArrangement = Arrangement.Top,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Text(
+                 ) {item { Spacer(modifier = Modifier.height(15.dp)) }
+                    item {            Text(
                         text = "Popular Products:",
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
                         modifier = Modifier
-                            .align(Alignment.Start)
-                            .padding(horizontal = 16.dp, vertical = 10.dp),
+                            .padding(horizontal = 16.dp),
                         textAlign = TextAlign.Center,
                         fontSize = 20.sp,
-                    )
-                    ProductList(products.products)
+                    ) }
+                    item {   ProductList(products.products, navController = navController)
+                    }
+                    item {
 
-                    Text(
-                        text = "Categories:",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        modifier = Modifier
-                            .align(Alignment.Start)
-                            .padding(horizontal = 16.dp, vertical = 10.dp),
-                        textAlign = TextAlign.Center,
-                        fontSize = 20.sp
-                    )
+                        Text(
+                            text = "Categories:",
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp),
+                            textAlign = TextAlign.Center,
+                            fontSize = 20.sp
+                        )
+                    }
+                    item {
+                        categoriesState.value.data?.let { categories ->
+                            CategoriesList(categories.product_categories)
+                        }
+                    }
+                    item {
+                        Text(
+                            text = "Recently Viewed:",
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp),
+                            textAlign = TextAlign.Center,
+                            fontSize = 20.sp
+                        )
 
-                    categoriesState.value.data?.let { categories ->
-                        CategoriesList(categories.product_categories)
+                    }
+                    item {
+                        Box(modifier = Modifier.height(500.dp)) {
+                        LazyGrid(products.products, navController)
+                    }
                     }
 
-                    Text(
-                        text = "Recently Viewed:",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        modifier = Modifier
-                            .align(Alignment.Start)
-                            .padding(horizontal = 16.dp, vertical = 10.dp),
-                        textAlign = TextAlign.Center,
-                        fontSize = 20.sp
-                    )
-
-                    LazyGrid(products.products)
                 }
             }
         }
@@ -128,6 +142,7 @@ fun ProductListScreen(viewModel: ProductsViewModel) {
         }
     }
 }
+
 
 
 

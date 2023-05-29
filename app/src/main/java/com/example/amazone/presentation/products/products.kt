@@ -1,6 +1,8 @@
 package com.example.amazone.presentation.products
 
+import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,40 +42,50 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import com.example.amazone.R
 import com.example.amazone.models.Category
 import com.example.amazone.models.Product
 import com.example.amazone.presentation.ProductsViewModel
+import com.example.amazone.presentation.home.HomeScreen
 import com.example.amazone.utils.enums.ApiStatus
 
 
 @Composable
-fun Products(viewModel: ProductsViewModel) {
-                            Column() {
-                            MyAppBar()
-                            ProductListScreen(viewModel)
-                        }
+fun Products(viewModel: ProductsViewModel, navController: NavController) {
+    Column() {
+        MyAppBar()
+        ProductListScreen(viewModel = viewModel, navController = navController)
+    }
 }
 
 
+
 @Composable
-fun ProductCard(product: Product) {
+fun ProductCard(product: Product,navController: NavController) {
     Card(
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
             .height(250.dp)
             .width(180.dp)
             .wrapContentSize(Alignment.Center)
-            .padding(8.dp)
+            .padding(8.dp).clickable {
+                navController.navigate("details")
 
-    ) {
+            },
+
+        ) {
 
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
 
-        ){
+        ) {
             Column(
                 modifier = Modifier.padding(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -81,7 +93,7 @@ fun ProductCard(product: Product) {
 
             ) {
                 AsyncImage(
-                    model =  product.image,
+                    model = product.image,
                     contentDescription = "Product Image",
                     modifier = Modifier
                         .height(150.dp)
@@ -117,7 +129,7 @@ fun ProductCard(product: Product) {
 
 
 @Composable
-fun LazyGrid(products: List<Product>) {
+fun LazyGrid(products: List<Product>, navController: NavController) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -125,13 +137,13 @@ fun LazyGrid(products: List<Product>) {
 
     ) {
         items(products.size) { product ->
-            ProductCard(product = products.get(product))
+            ProductCard(product = products.get(product), navController = navController)
         }
     }
 }
 
 @Composable
-fun ProductListScreen(viewModel: ProductsViewModel) {
+fun ProductListScreen(viewModel: ProductsViewModel, navController: NavController) {
     val productState by viewModel.productState.collectAsState()
 
     when (productState.status) {
@@ -146,7 +158,7 @@ fun ProductListScreen(viewModel: ProductsViewModel) {
 
         ApiStatus.SUCCESS -> {
             productState.data?.let { products ->
-                LazyGrid(products.products)
+                LazyGrid(products.products, navController)
 
             }
         }
@@ -157,7 +169,8 @@ fun ProductListScreen(viewModel: ProductsViewModel) {
                 modifier = Modifier.fillMaxSize()
             ) {
                 Text(text = "Failed to load Products \uD83D\uDE14")
-            }        }
+            }
+        }
     }
 }
 
@@ -200,15 +213,14 @@ fun MyAppBar() {
 }
 
 
-
 @Composable
-fun ProductList(products: List<Product>) {
+fun ProductList(products: List<Product>, navController: NavController) {
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
     ) {
         items(products) { product ->
-            ProductCard(product = product)
+            ProductCard(product = product, navController = navController)
         }
     }
 }

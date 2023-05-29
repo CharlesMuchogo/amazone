@@ -34,6 +34,7 @@ import com.example.amazone.presentation.bottomnavigation.Account
 import com.example.amazone.presentation.bottomnavigation.BottomNavItem
 import com.example.amazone.presentation.bottomnavigation.Cart
 import com.example.amazone.presentation.home.HomeScreen
+import com.example.amazone.presentation.products.ProductDescriptionPage
 import com.example.amazone.presentation.products.Products
 import com.example.amazone.ui.theme.AmazoneTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -101,10 +102,10 @@ class MainActivity : ComponentActivity() {
 fun Navigation(navController: NavHostController, viewModel: ProductsViewModel ) {
     NavHost(navController = navController, startDestination = "home") {
         composable("home") {
-            HomeScreen(viewModel)
+            HomeScreen(viewModel, navController = navController)
         }
         composable("products") {
-            Products(viewModel)
+            Products(viewModel, navController = navController)
         }
         composable("cart") {
             Cart()
@@ -112,7 +113,10 @@ fun Navigation(navController: NavHostController, viewModel: ProductsViewModel ) 
         composable("account") {
             Account()
         }
+        composable("details") {
+            ProductDescriptionPage(viewmodel = viewModel)
 
+    }
     }
 }
 
