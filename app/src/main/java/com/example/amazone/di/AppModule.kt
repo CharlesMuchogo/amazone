@@ -28,7 +28,7 @@ object AppModule {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         val productionUrl = "http://13.246.207.31:8080/api/";
-        val localUrl = "http://192.168.135.19:8080/api/";
+        val localUrl = "http://192.168.135.124:8080/api/";
 
         val client = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
@@ -40,27 +40,24 @@ object AppModule {
             .create(ApiService::class.java)
     }
 
-    @Provides
     @Singleton
-    fun provideProductRepository(apiService: ApiService): ProductRepository{
-        return  ProductRepository(apiService)
+    @Provides
+    fun provideDatabase(@ApplicationContext app: Context): AppDatabase{
+        return Room.databaseBuilder(
+            app,
+            AppDatabase::class.java,
+            "amazone.db"
+        ).build()
     }
 
     @Provides
     @Singleton
-    fun provideCategoriesRepository(apiService: ApiService): ProductRepository{
-        return  ProductRepository(apiService)
+    fun provideProductRepository(apiService: ApiService, appDatabase:AppDatabase): ProductRepository{
+        return  ProductRepository(apiService = apiService, appDb =  appDatabase)
     }
 
-    @Singleton
-    @Provides
-    fun provideDatabase(
-        @ApplicationContext app: Context
-    ) = Room.databaseBuilder(
-        app,
-        AppDatabase::class.java,
-        "amazone"
-    ).build()
+
+
 
 
 
