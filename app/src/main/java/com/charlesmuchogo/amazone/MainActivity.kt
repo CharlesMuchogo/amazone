@@ -41,7 +41,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             AmazoneTheme {
 
-                val viewModel =  hiltViewModel<ProductsViewModel>()
                 DestinationsNavHost(navGraph = NavGraphs.root)
 
             }
@@ -55,10 +54,8 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomNavigation(navigator: DestinationsNavigator) {
-//    var selectedItem by rememberSaveable {
-//        mutableSetOf(0)
-//    }
-    var items = listOf<BottomNavigationItem>(
+
+    var items = listOf(
         BottomNavigationItem(
             screen = "Home",
             selectedIcon = Icons.Filled.Home,

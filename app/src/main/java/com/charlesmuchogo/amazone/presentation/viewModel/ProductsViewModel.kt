@@ -7,7 +7,6 @@ import androidx.room.withTransaction
 import com.example.amazone.api.ApiService
 import com.example.amazone.api.ProductApiState
 import com.example.amazone.models.CategoriesDTO
-import com.example.amazone.models.Product
 import com.example.amazone.models.Products
 import com.example.amazone.repository.ProductRepository
 import com.example.amazone.utils.enums.ApiStatus
